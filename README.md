@@ -138,9 +138,9 @@ Log which persona helps with each writing task. Over time, see patterns:
 Track which personas help most with executive dysfunction.
 
 ### 3. soulOS Integration
-Add persona tracking to Notion. Every note, every document logs which consciousness mode was active.
+Add persona tracking to memory database. Every note, every document logs which consciousness mode was active.
 
-### 4. Fulbright/Research Artifact
+### 4. Research Artifact
 This IS the Cerebral SDK demonstration. You have:
 - Version-controlled consciousness evolution
 - Quantified cognitive function usage
@@ -254,7 +254,6 @@ Questions? The system itself is self-documenting through accumulated mythology.
 ## CREDITS
 
 **Architecture**: Harvey Tagalicud  
-**Implementation**: Claude (Sonnet 4.5)  
 **Conceptual Framework**: Sanctuary ecosystem  
 **Mythological Foundation**: Your lived experience
 
