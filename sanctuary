@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""
+SANCTUARY MYTHOS CLI
+====================
+Command-line interface for interacting with the Living Mythology Engine.
+
+Usage:
+    sanctuary invoke <persona> <context> [--weight=5]
+    sanctuary evolve <persona>
+    sanctuary report [persona]
+    sanctuary emerge <need_description>
+    sanctuary export
+    sanctuary list
+"""
+
+import sys
+import argparse
+from mythos_engine import MythosEngine, initialize_sanctuary_personas
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Sanctuary Living Mythology CLI",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+    
+    # Invoke command
+    invoke_parser = subparsers.add_parser('invoke', help='Log a persona invocation')
+    invoke_parser.add_argument('persona', help='Persona name')
+    invoke_parser.add_argument('context', help='Context of invocation')
+    invoke_parser.add_argument('--weight', type=int, default=5, help='Emotional weight (1-10)')
+    invoke_parser.add_argument('--tags', nargs='*', help='Tags for this invocation')
+    
+    # Report command
+    report_parser = subparsers.add_parser('report', help='Generate mythological report')
+    report_parser.add_argument('persona', nargs='?', help='Specific persona (or all)')
+    
+    # List command
+    list_parser = subparsers.add_parser('list', help='List all personas')
+    
+    # Emerge command
+    emerge_parser = subparsers.add_parser('emerge', help='Suggest a new persona')
+    emerge_parser.add_argument('need', help='Description of the need')
+    
+    # Export command
+    export_parser = subparsers.add_parser('export', help='Export evolved presets')
+    
+    # Force evolve command (for testing)
+    evolve_parser = subparsers.add_parser('evolve', help='Force evolution (testing only)')
+    evolve_parser.add_argument('persona', help='Persona to evolve')
+    
+    args = parser.parse_args()
+    
+    # Initialize engine
+    engine = MythosEngine()
+    
+    # Initialize personas if first run
+    if not engine.personas:
+        print("🌱 First run detected. Initializing Sanctuary personas...")
+        initialize_sanctuary_personas(engine)
+    
+    # Execute command
+    if args.command == 'invoke':
+        engine.log_invocation(
+            args.persona,
+            args.context,
+            tags=args.tags or [],
+            emotional_weight=args.weight
+        )
+        print(f"✨ Invocation logged for {args.persona}")
+    
+    elif args.command == 'report':
+        print(engine.generate_mythological_report(args.persona))
+    
+    elif args.command == 'list':
+        print("\n🏛️  SANCTUARY PERSONAS")
+        print("=" * 60)
+        for name, persona in engine.personas.items():
+            print(f"\n{name}")
+            print(f"  Role: {persona.role}")
+            print(f"  Stage: {persona.evolution_stage} | Invocations: {persona.invocation_count}")
+            if persona.developed_traits:
+                print(f"  Traits: {', '.join(persona.developed_traits)}")
+    
+    elif args.command == 'emerge':
+        suggestion = engine.suggest_emergence(args.need)
+        print("\n🌱 EMERGENCE SUGGESTION")
+        print("=" * 60)
+        for key, value in suggestion.items():
+            print(f"{key}: {value}")
+    
+    elif args.command == 'export':
+        output = engine.export_evolved_presets()
+        export_path = engine.data_dir / "evolved_presets.yaml"
+        with open(export_path, 'w') as f:
+            f.write(output)
+        print(f"✅ Exported evolved presets to: {export_path}")
+        print("\nFirst 20 lines:")
+        print("\n".join(output.split("\n")[:20]))
+    
+    elif args.command == 'evolve':
+        engine._trigger_evolution(args.persona)
+    
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

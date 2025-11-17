@@ -1,0 +1,7 @@
+docs: Add GitHub setup guide and contribution guidelines
+
+- GITHUB_SETUP.sh: Step-by-step instructions for pushing to GitHub
+- CONTRIBUTING.md: Philosophy-aware contribution guide
+  - Emphasizes mythology as lived system
+  - Discourages gamification/monetization
+  - Encourages persona constellation sharing
